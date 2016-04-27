@@ -7,6 +7,7 @@ defmodule Words do
   @spec count(String.t) :: map
   def count(sentence) do
     sentence
+      |> clean_sentence
       |> String.split |> count_words
   end
 
@@ -19,4 +20,19 @@ defmodule Words do
   end
 
   def add_one(x), do: x + 1
+
+  def normalize_case(word), do: String.downcase(word)
+
+  def strip_punctuation(sentence) do
+    String.replace(sentence, ~r/[!@#$%^&*()+=;:'',.<>]+/, "")
+  end
+
+  def replace_underscores(sentence), do: String.replace(sentence, ~r/_/, " ")
+
+  def clean_sentence(sentence) do
+    sentence
+     |> strip_punctuation
+     |> replace_underscores
+     |> normalize_case
+  end
 end
