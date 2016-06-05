@@ -8,11 +8,25 @@ defmodule RunLengthEncoder do
   """
   @spec encode(String.t) :: String.t
   def encode(string) do
-
+    string
+      |> to_char_list
+      |> each_chunk
+      |> get_count
+      |> to_string
   end
 
   @spec decode(String.t) :: String.t
   def decode(string) do
+    Regex.scan(~r/(\d+)(.)/, string)
+      |> Enum.map_join(fn[_,n,c]-> String.duplicate(c, String.to_integer n) end)
+  end
 
+  defp each_chunk(array) do
+    Enum.chunk_by(array, &(&1))
+  end
+  defp get_count(letters) do
+    Enum.flat_map(letters, fn (chunk) ->
+     to_char_list(length(chunk)) ++ [hd(chunk)]
+    end)
   end
 end
